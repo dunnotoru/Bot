@@ -17,14 +17,18 @@ namespace Bot.WebClient
             _httpClient = new HttpClient();
         }
 
-        public async Task GetScheduleHtml()
+        public async Task<string> GetScheduleHtml()
         {
             using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,
                 "https://www.nstu.ru/studies/schedule/schedule_classes/schedule?group=%D0%90%D0%92%D0%A2-113");
 
             using HttpResponseMessage response = await _httpClient.SendAsync(request);
 
+            string content = await response.Content.ReadAsStringAsync();
 
+            _httpClient.Dispose();
+
+            return content;
         }
     }
 }

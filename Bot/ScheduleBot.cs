@@ -36,6 +36,7 @@ namespace Bot
             var me = await _botClient.GetMeAsync();
             Console.WriteLine($"{me.FirstName} started!");
 
+
             await Task.Delay(-1);
         }
 
