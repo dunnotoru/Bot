@@ -26,7 +26,7 @@ namespace Bot.MessageHandlers
         private async Task ProcessMessage(ITelegramBotClient botClient, Message message)
         {
             Client client = new Client();
-            Parser = new ScheduleHtmlParser();
+            Parser = new NstuScheduleHtmlParser();
 
             if (message.Text.ToLower() == "schedule")
             {
