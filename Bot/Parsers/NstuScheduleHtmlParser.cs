@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Bot.Interfaces;
+using HtmlAgilityPack;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace Bot.Parsers
 {
@@ -12,36 +10,45 @@ namespace Bot.Parsers
     {
         public async Task<string> ParseAsync(string htmlPage)
         {
-            Regex dayRegex = new Regex(@"schedule__table-day.+>(..)<");
-            Regex dateRegex = new Regex(@"schedule__table-date.+>(.....)<");
-            Regex timeRegex = new Regex(@"schedule__table-time.+>(.{11})<");
-            Regex itemRegex = new Regex(@"schedule__table-item.+>\s+(.+)&.+>(.+)<.+\s+.+>(.+)<.+\s+.+>(.+)<");
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(htmlPage);
 
-            MatchCollection dayMatches = dayRegex.Matches(htmlPage);
-            MatchCollection dateMatches = dateRegex.Matches(htmlPage);
-            MatchCollection timeMatches = timeRegex.Matches(htmlPage);
-            MatchCollection itemMatches = itemRegex.Matches(htmlPage);
+            HtmlNode table = doc.DocumentNode.SelectSingleNode("/html/body/div[2]/div/main/div[2]/div[3]/div[2]");
+            
+            HtmlNodeCollection scheduleTableRow = table.ChildNodes;
 
-            foreach (Match d in dayMatches)
-                Console.WriteLine(d.Groups[1].Value);
+            Regex r = new Regex(@"(\d\d:\d\d-\d\d:\d\d)(\D+)(\d-\d{0,3})\d-");
 
-            foreach (Match d in dateMatches)
-                Console.WriteLine(d.Groups[1].Value);
+            StringBuilder sb = new StringBuilder();
 
-            foreach (Match d in timeMatches)
-                Console.WriteLine(d.Groups[1].Value);
-
-            foreach (Match d in itemMatches)
+            foreach (HtmlNode sch in scheduleTableRow)
             {
-                Console.WriteLine(d.Groups[1].Value);
-                Console.WriteLine(d.Groups[2].Value);
-                Console.WriteLine(d.Groups[3].Value);
-                Console.WriteLine(d.Groups[4].Value);
+                if(sch.Name != "div")
+                    continue;
+
+                string data = sch.InnerText.Replace("\n", "").
+                    Replace("\t", "").
+                    Replace("&middot;", "").
+                    Replace("&nbsp", "");
+
+                string date = data.Substring(0, 7);
+                data = data.Substring(7, data.Length - 7);
+
+                MatchCollection matches = r.Matches(data);
+                
+                List<ScheduleCell> cells = new List<ScheduleCell>();
+                for (int i = 0; i < matches.Count; i++)
+                    cells.Add(new ScheduleCell(
+                        matches[i].Groups[1].Value,
+                        matches[i].Groups[2].Value,
+                        matches[i].Groups[3].Value
+                        ));
+
+                DaySchedule d = new DaySchedule(cells, date);
+
+                sb.AppendLine(d.GetFormattedString());
             }
-
-            return "";
+            return sb.ToString();
         }
-
-        
     }
 }

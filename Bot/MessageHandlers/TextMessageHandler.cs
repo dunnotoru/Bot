@@ -32,6 +32,10 @@ namespace Bot.MessageHandlers
             {
                 string htmlPage = await client.GetScheduleHtml();
                 string schedule = await Parser.ParseAsync(htmlPage);
+                await botClient.SendTextMessageAsync(
+                    chatId: message.Chat.Id,
+                    text: schedule
+                    );
             }
             else
             {
