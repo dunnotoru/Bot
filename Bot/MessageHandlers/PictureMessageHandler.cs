@@ -10,7 +10,6 @@ namespace Bot.MessageHandlers
 
         public async Task HandleMessage(ITelegramBotClient botClient, Message message)
         {
-
             if (message.Photo != null)
             {
                 Console.WriteLine("Picture");

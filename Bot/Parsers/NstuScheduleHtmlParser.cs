@@ -1,13 +1,11 @@
-﻿using System;
-using Bot.Interfaces;
+﻿using Bot.Interfaces;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
 using System.Text;
-using Bot.WebClient;
 
 namespace Bot.Parsers
 {
-    internal class NstuScheduleHtmlParser : IHtmlScheduleParser
+    internal class NstuScheduleHtmlParser : IScheduleParser
     {
         private string Html { get; set; }
         public NstuScheduleHtmlParser(string html)
@@ -23,17 +21,17 @@ namespace Bot.Parsers
             DayOfWeek.Wednesday, DayOfWeek.Thursday,DayOfWeek.Friday, DayOfWeek.Saturday};
 
             foreach (DayOfWeek day in days)
-                sb.AppendLine(await ParseDayAsync(day));
+                sb.AppendLine(await ParseDateAsync(day));
 
             return sb.ToString();
         }
 
         public async Task<string> ParseTodayAsync()
         {
-            return await ParseDayAsync(DateTime.Today.DayOfWeek);
+            return await ParseDateAsync(DateTime.Today.DayOfWeek);
         }
 
-        public async Task<string> ParseDayAsync(DayOfWeek dayOfWeek)
+        public async Task<string> ParseDateAsync(DayOfWeek dayOfWeek)
         {
             Dictionary<DayOfWeek, string> day = new Dictionary<DayOfWeek, string>()
             {

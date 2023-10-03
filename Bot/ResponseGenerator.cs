@@ -10,11 +10,13 @@ namespace Bot
     {
         public async Task GenerateResponseAsync(ITelegramBotClient botClient, Update update)
         {
+            IMessageHandler commandHandler = new CommandMessageHandler();
             IMessageHandler textHandler = new TextMessageHandler();
             IMessageHandler pictureHandler = new PictureMessageHandler();
             IMessageHandler stickerHandler = new StickerMessageHandler();
             IMessageHandler unknownHandler = new UnknownMessageHandler();
 
+            commandHandler.Successor = textHandler;
             textHandler.Successor = pictureHandler;
             pictureHandler.Successor = stickerHandler;
             stickerHandler.Successor = unknownHandler;
@@ -22,7 +24,7 @@ namespace Bot
             switch (update.Type)
             {
                 case UpdateType.Message:
-                    await textHandler.HandleMessage(botClient, update.Message);
+                    await commandHandler.HandleMessage(botClient, update.Message);
                     break;
             }
         }

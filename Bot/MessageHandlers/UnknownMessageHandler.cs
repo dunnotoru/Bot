@@ -7,9 +7,9 @@ namespace Bot.MessageHandlers
     internal class UnknownMessageHandler : IMessageHandler
     {
         public IMessageHandler Successor { get; set; }
+
         public async Task HandleMessage(ITelegramBotClient botClient, Message message)
         {
-            Console.WriteLine("Unknown Message Type");
             await botClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
                     text: "Сложна"

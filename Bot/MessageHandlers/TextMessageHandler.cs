@@ -1,7 +1,7 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using Bot.Interfaces;
-using Bot.WebClient;
+
 using Bot.Parsers;
 
 namespace Bot.MessageHandlers
@@ -24,43 +24,10 @@ namespace Bot.MessageHandlers
 
         private async Task ProcessMessage(ITelegramBotClient botClient, Message message)
         {
-            if (message.Text.ToLower() == "week")
-            {
-                await botClient.SendTextMessageAsync(
-                    chatId: message.Chat.Id,
-                    text: await GetWeekSchedule()
-                    );
-            }
-            else if (message.Text.ToLower() == "today")
-            {
-                await botClient.SendTextMessageAsync(
-                    chatId: message.Chat.Id,
-                    text: await GetDaySchedule()
-                    );
-            }
-            else
-            {
-                await botClient.SendTextMessageAsync(
+            await botClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
                     text: message.Text
                     );
-            }
-        }
-
-        private async Task<string> GetWeekSchedule()
-        {
-            Client client = new Client();
-            string htmlPage = await client.GetScheduleHtml();
-            IHtmlScheduleParser Parser = new NstuScheduleHtmlParser(htmlPage);
-            return await Parser.ParseWeekAsync();
-        }
-
-        private async Task<string> GetDaySchedule()
-        {
-            Client client = new Client();
-            string htmlPage = await client.GetScheduleHtml();
-            IHtmlScheduleParser Parser = new NstuScheduleHtmlParser(htmlPage);
-            return await Parser.ParseTodayAsync();
         }
     }
 }

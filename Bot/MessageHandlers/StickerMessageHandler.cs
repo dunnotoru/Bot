@@ -2,7 +2,6 @@
 using Telegram.Bot.Types;
 using Bot.Interfaces;
 
-
 namespace Bot.MessageHandlers
 {
     internal class StickerMessageHandler : IMessageHandler
@@ -11,7 +10,6 @@ namespace Bot.MessageHandlers
 
         public async Task HandleMessage(ITelegramBotClient botClient, Message message)
         {
-
             if (message.Sticker != null)
             {
                 Console.WriteLine("Sticker");
