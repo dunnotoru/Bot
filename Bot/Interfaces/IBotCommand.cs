@@ -2,7 +2,7 @@
 {
     internal interface IBotCommand
     {
-        public Task<string> ProcessCommand(IBotCommandArgs commandArgs);
+        public Task ProcessCommand(IBotCommandArgs commandArgs);
         public bool CanProcess(IBotCommandArgs commandArgs);
     }
 }

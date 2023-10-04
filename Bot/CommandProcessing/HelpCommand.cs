@@ -1,4 +1,6 @@
 ﻿using Bot.Interfaces;
+using Telegram.Bot;
+using Telegram.Bot.Types;
 
 namespace Bot.CommandProcessing
 {
@@ -11,12 +13,15 @@ namespace Bot.CommandProcessing
             return command.Name == _commandName;
         }
 
-        public async Task<string> ProcessCommand(IBotCommandArgs command)
+        public async Task ProcessCommand(IBotCommandArgs command)
         {
             if (!CanProcess(command))
                 throw new ArgumentException(nameof(command));
 
-            return _respondText;
+            await command.Client.SendTextMessageAsync(
+                    chatId: command.UserMessage.Chat.Id,
+                    text: _respondText
+                    );
         }
     }
 }

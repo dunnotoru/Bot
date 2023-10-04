@@ -24,11 +24,10 @@ namespace Bot.MessageHandlers
             if (!string.IsNullOrEmpty(message.Text)
                 && message.Text.StartsWith('/'))
             {
-                text = await _commandProcessor.ProcessCommand(new CommandArgs(message.Text));
-                await botClient.SendTextMessageAsync(
-                    chatId: message.Chat.Id,
-                    text: text
-                    );
+                await _commandProcessor.ProcessCommand(
+                    new CommandArgs(message.Text, 
+                    botClient,
+                    message));
             }
             else
             {

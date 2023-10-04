@@ -15,7 +15,7 @@ namespace Bot.MessageHandlers
                 Console.WriteLine("Sticker");
                 await botClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
-                    text: "Ну и че ты скинул"
+                    text: "Нормально общайся"
                     );
             }
             else if (Successor != null)

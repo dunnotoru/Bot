@@ -47,20 +47,15 @@ namespace Bot.Parsers
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(Html);
             HtmlNode table = doc.DocumentNode.SelectSingleNode("/html/body/div[2]/div/main/div[2]/div[3]/div[2]");
-            HtmlNodeCollection scheduleTableRow = table.ChildNodes;
             Regex r = new Regex(@"(\d\d:\d\d-\d\d:\d\d)(\D+)(\d-\d{0,3})\d-");
 
-            HtmlNode sch = scheduleTableRow[0];
-            foreach (HtmlNode sched in scheduleTableRow)
-            {
-                if (sched.InnerText.Contains(day[dayOfWeek]))
-                {
-                    sch = sched;
-                    break;
-                }
-            }
+            List<HtmlNode> scheduleDaysList = table.ChildNodes.Where(_ => _.Name == "div").ToList();
+            
+            string data = scheduleDaysList.First(
+                _ => _.InnerText.Trim().StartsWith(day[dayOfWeek])).
+                InnerText;
 
-            string data = sch.InnerText.Replace("\n", "").
+            data = data.Replace("\n", "").
                 Replace("\t", "").
                 Replace("&middot;", "").
                 Replace("&nbsp", "");

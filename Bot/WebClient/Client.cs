@@ -9,18 +9,17 @@ namespace Bot.WebClient
     internal class Client
     {
         private HttpClient _httpClient;
-        private string UriString { get; set; }
+        public string UriString { get; private set; }
 
-        public Client(string uri = "")
+        public Client(string uri)
         {
             UriString = uri;
             _httpClient = new HttpClient();
         }
 
-        public async Task<string> GetScheduleHtml()
+        public async Task<string> GetHtml()
         {
-            using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,
-                "https://www.nstu.ru/studies/schedule/schedule_classes/schedule?group=%D0%90%D0%92%D0%A2-113");
+            using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, UriString);
 
             using HttpResponseMessage response = await _httpClient.SendAsync(request);
 

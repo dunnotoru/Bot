@@ -15,7 +15,7 @@ namespace Bot.MessageHandlers
                 Console.WriteLine("Picture");
                 await botClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
-                    text: "Ну и кринжатина"
+                    text: "Ну и кринж ахахах"
                     );
             }
             else if (Successor != null)

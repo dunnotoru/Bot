@@ -15,10 +15,12 @@ namespace Bot.CommandProcessing
             return _processors.ContainsKey(command.Name);
         }
         
-        public async Task<string> ProcessCommand(IBotCommandArgs command)
+        public async Task ProcessCommand(IBotCommandArgs command)
         {
-            if (!CanProcess(command)) throw new ArgumentException(nameof(command));
-            return await _processors[command.Name].ProcessCommand(command);
+            if (!CanProcess(command))
+                throw new ArgumentException(nameof(command));
+
+            await _processors[command.Name].ProcessCommand(command);
         }
     }
 }

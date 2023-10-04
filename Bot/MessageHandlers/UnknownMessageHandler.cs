@@ -12,7 +12,7 @@ namespace Bot.MessageHandlers
         {
             await botClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
-                    text: "Сложна"
+                    text: "Не понял"
                     );
         }
     }
