@@ -1,9 +1,9 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace Bot.Interfaces
+namespace ScheduleBot.Interfaces
 {
-    internal interface IBotCommandArgs
+    public interface IBotCommandArgs
     {
         public string Name { get; }
         public ITelegramBotClient Client { get; }

@@ -1,21 +1,20 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
-using Bot.Interfaces;
+using ScheduleBot.Interfaces;
 
-namespace Bot.MessageHandlers
+namespace ScheduleBot.UpdateHandlers.MessageHandlers
 {
-    internal class PictureMessageHandler : IMessageHandler
+    internal class TextMessageHandler : IMessageHandler
     {
-        public IMessageHandler Successor { get; set; }
+        public IMessageHandler? Successor { get; set; }
 
         public async Task HandleMessage(ITelegramBotClient botClient, Message message)
         {
-            if (message.Photo != null)
+            if (!string.IsNullOrEmpty(message.Text))
             {
-                Console.WriteLine("Picture");
                 await botClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
-                    text: "Ну и кринж ахахах"
+                    text: message.Text
                     );
             }
             else if (Successor != null)

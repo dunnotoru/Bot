@@ -1,9 +1,8 @@
-﻿namespace Bot.Interfaces
+﻿namespace ScheduleBot.Interfaces
 {
-    internal interface IScheduleParser
+    public interface IScheduleParser
     {
         Task<string> ParseWeekAsync();
         Task<string> ParseTodayAsync();
-        Task<string> ParseDateAsync(DayOfWeek dayOfWeek);
     }
 }

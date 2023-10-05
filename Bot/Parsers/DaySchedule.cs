@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Bot
+namespace ScheduleBot
 {
     internal class DaySchedule
     {

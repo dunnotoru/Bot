@@ -1,10 +1,11 @@
-﻿using Bot.Interfaces;
-using Bot.WebClient;
-using Bot.Parsers;
+﻿using ScheduleBot.Interfaces;
+using ScheduleBot.WebClient;
+using ScheduleBot.Parsers;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
+using Microsoft.Extensions.Configuration;
 
-namespace Bot.CommandProcessing
+namespace ScheduleBot.CommandProcessing
 {
     internal class TodayScheduleCommand : IBotCommand
     {
@@ -17,17 +18,20 @@ namespace Bot.CommandProcessing
         public async Task ProcessCommand(IBotCommandArgs command)
         {
             if (!CanProcess(command))
-                throw new ArgumentException(nameof(command));
+                throw new ArgumentException(null, nameof(command));
+
+            
+            BotConfiguration bc = new();
 
             Client client =
-                new Client("https://www.nstu.ru/studies/schedule/schedule_classes/schedule?group=%D0%90%D0%92%D0%A2-113");
-
+                new Client(bc.AppConfiguration["NstuUrl"]);
             string htmlPage = await client.GetHtml();
             IScheduleParser Parser = new NstuScheduleHtmlParser(htmlPage);
 
-            InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton("Тык");
-            inlineKeyboardButton.CallbackData = "Button \"Тык\" has been pressed";
-            inlineKeyboardButton.Url = client.UriString;
+            InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton("Тык")
+            {
+                Url = client.UriString
+            };
 
             List<InlineKeyboardButton> buttonsRow = new List<InlineKeyboardButton>()
             {
@@ -36,12 +40,12 @@ namespace Bot.CommandProcessing
 
             InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup(buttonsRow);
             
-
             await command.Client.SendTextMessageAsync(
                     chatId: command.UserMessage.Chat.Id,
                     text: await Parser.ParseTodayAsync(),
                     replyMarkup: keyboardMarkup
                     );
+
         }
     }
 }

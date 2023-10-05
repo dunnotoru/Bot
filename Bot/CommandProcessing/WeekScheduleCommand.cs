@@ -1,9 +1,10 @@
-﻿using Bot.Interfaces;
-using Bot.WebClient;
-using Bot.Parsers;
+﻿using ScheduleBot.Interfaces;
+using ScheduleBot.WebClient;
+using ScheduleBot.Parsers;
 using Telegram.Bot;
+using Telegram.Bot.Types.ReplyMarkups;
 
-namespace Bot.CommandProcessing
+namespace ScheduleBot.CommandProcessing
 {
     internal class WeekScheduleCommand : IBotCommand
     {
@@ -16,17 +17,28 @@ namespace Bot.CommandProcessing
         public async Task ProcessCommand(IBotCommandArgs command)
         {
             if(!CanProcess(command))
-                throw new ArgumentException(nameof(command));
+                throw new ArgumentException(null, nameof(command));
 
-            Client client =
-                new Client("https://www.nstu.ru/studies/schedule/schedule_classes/schedule?group=%D0%90%D0%92%D0%A2-113");
-
+            Client client = new Client(new BotConfiguration().AppConfiguration["NstuUrl"]);
             string htmlPage = await client.GetHtml();
             IScheduleParser Parser = new NstuScheduleHtmlParser(htmlPage);
 
+            InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton("Тык")
+            {
+                Url = client.UriString
+            };
+
+            List<InlineKeyboardButton> buttonsRow = new List<InlineKeyboardButton>()
+            {
+                inlineKeyboardButton
+            };
+
+            InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup(buttonsRow);
+
             await command.Client.SendTextMessageAsync(
                     chatId: command.UserMessage.Chat.Id,
-                    text: await Parser.ParseWeekAsync()
+                    text: await Parser.ParseWeekAsync(),
+                    replyMarkup: keyboardMarkup
                     );
         }
 

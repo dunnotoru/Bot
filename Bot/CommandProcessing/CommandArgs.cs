@@ -1,8 +1,8 @@
-﻿using Bot.Interfaces;
+﻿using ScheduleBot.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace Bot.CommandProcessing
+namespace ScheduleBot.CommandProcessing
 {
     internal class CommandArgs : IBotCommandArgs
     {

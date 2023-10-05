@@ -1,12 +1,12 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
-using Bot.Interfaces;
+using ScheduleBot.Interfaces;
 
-namespace Bot.MessageHandlers
+namespace ScheduleBot.UpdateHandlers.MessageHandlers
 {
     internal class UnknownMessageHandler : IMessageHandler
     {
-        public IMessageHandler Successor { get; set; }
+        public IMessageHandler? Successor { get; set; }
 
         public async Task HandleMessage(ITelegramBotClient botClient, Message message)
         {

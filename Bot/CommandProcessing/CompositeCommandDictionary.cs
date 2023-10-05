@@ -1,26 +1,32 @@
-﻿using Bot.Interfaces;
+﻿using ScheduleBot.Interfaces;
 
-namespace Bot.CommandProcessing
+namespace ScheduleBot.CommandProcessing
 {
-    internal class CompositeCommandDictionary
+    internal class CompositeCommandDictionary 
     {
-        Dictionary<string, IBotCommand> _processors = new Dictionary<string, IBotCommand>();
+        private Dictionary<string, IBotCommand> Processors { get; set; }
+            
+
+        public CompositeCommandDictionary()
+        {
+            Processors = new Dictionary<string, IBotCommand>();
+        } 
         public void Register(string commandName, IBotCommand processor)
         {
-            _processors.Add(commandName, processor);
+            Processors.Add(commandName, processor);
         }
 
         public bool CanProcess(IBotCommandArgs command)
         {
-            return _processors.ContainsKey(command.Name);
+            return Processors.ContainsKey(command.Name);
         }
         
         public async Task ProcessCommand(IBotCommandArgs command)
         {
             if (!CanProcess(command))
-                throw new ArgumentException(nameof(command));
+                throw new ArgumentException(null, nameof(command));
 
-            await _processors[command.Name].ProcessCommand(command);
+            await Processors[command.Name].ProcessCommand(command);
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using Bot.Interfaces;
+﻿using ScheduleBot.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace Bot.CommandProcessing
+namespace ScheduleBot.CommandProcessing
 {
     internal class HelpCommand : IBotCommand
     {
@@ -16,7 +16,7 @@ namespace Bot.CommandProcessing
         public async Task ProcessCommand(IBotCommandArgs command)
         {
             if (!CanProcess(command))
-                throw new ArgumentException(nameof(command));
+                throw new ArgumentException(null, nameof(command));
 
             await command.Client.SendTextMessageAsync(
                     chatId: command.UserMessage.Chat.Id,

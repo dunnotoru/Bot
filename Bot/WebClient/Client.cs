@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bot.WebClient
+namespace ScheduleBot.WebClient
 {
     internal class Client
     {
@@ -20,7 +20,6 @@ namespace Bot.WebClient
         public async Task<string> GetHtml()
         {
             using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, UriString);
-
             using HttpResponseMessage response = await _httpClient.SendAsync(request);
 
             string content = await response.Content.ReadAsStringAsync();

@@ -5,26 +5,33 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Exceptions;
-using Bot.Interfaces;
+using ScheduleBot.Interfaces;
+using ScheduleBot.UpdateHandlers;
 
-namespace Bot
+namespace ScheduleBot
 {
     public class ScheduleBot
     {
         private TelegramBotClient _botClient;
         private ReceiverOptions _receiverOptions;
-        private IResponseGenerator responseGenerator;
+        private UpdateRouter _updateRouter;
 
         public ScheduleBot(string token)
         {
             _botClient = new TelegramBotClient(token);
+
             _receiverOptions = new ReceiverOptions
             {
-                AllowedUpdates = new[] { UpdateType.Message, UpdateType.MyChatMember },
-                ThrowPendingUpdates = true,
+                ThrowPendingUpdates = true
             };
 
-            responseGenerator = new ResponseGenerator();
+            _updateRouter = new UpdateRouter(
+                new Dictionary<UpdateType, Interfaces.IUpdateHandler>()
+                {
+                    {UpdateType.Message, new MessageUpdateHandler() },
+                    {UpdateType.CallbackQuery, new CallbackQueryUpdateHandler() }
+                }
+                );
         }
 
         public async Task Run()
@@ -33,9 +40,8 @@ namespace Bot
 
             _botClient.StartReceiving(UpdateHandler, ErrorHandler, _receiverOptions, cts.Token);
 
-            var me = await _botClient.GetMeAsync();
+            User me = await _botClient.GetMeAsync();
             Console.WriteLine($"{me.FirstName} started!");
-
 
             await Task.Delay(-1);
         }
@@ -44,7 +50,7 @@ namespace Bot
         {
             try
             {
-                await responseGenerator.GenerateResponseAsync(botClient, update);
+                await _updateRouter.RouteUpdate(botClient, update);
             }
             catch (Exception ex)
             {

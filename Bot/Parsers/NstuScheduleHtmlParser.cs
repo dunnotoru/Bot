@@ -1,9 +1,9 @@
-﻿using Bot.Interfaces;
+﻿using ScheduleBot.Interfaces;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
 using System.Text;
 
-namespace Bot.Parsers
+namespace ScheduleBot.Parsers
 {
     internal class NstuScheduleHtmlParser : IScheduleParser
     {

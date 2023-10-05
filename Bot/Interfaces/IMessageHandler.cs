@@ -1,11 +1,11 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace Bot.Interfaces
+namespace ScheduleBot.Interfaces
 {
-    internal interface IMessageHandler
+    public interface IMessageHandler
     {
-        public IMessageHandler Successor { get; set; }
+        public IMessageHandler? Successor { get; set; }
         public Task HandleMessage(ITelegramBotClient botClient, Message message);
     }
 }
